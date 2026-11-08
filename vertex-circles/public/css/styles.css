@@ -1,0 +1,522 @@
+/* ------------------------------------------------------------------
+   Colours
+   ------------------------------------------------------------------ */
+
+:root {
+  --paper: #F2F5F7;
+  --grid: rgba(30, 60, 90, .075);
+  --ink: #14212E;
+  --ink-2: #4A5B6B;
+  --ink-3: #7D8B98;
+  --rule: #D3DBE2;
+  --rule-2: #A9B6C2;
+  --panel: #FFFFFF;
+  --panel-2: #EEF2F5;
+  --accent: #0B6E8F;
+  --accent-bg: #DCEEF4;
+
+  --pos: #C2367A;   /* curvature > 0 */
+  --neg: #1F8A5B;   /* curvature < 0 */
+  --warn: #B7791F;  /* sharp corners */
+  --vel: #D9480F;   /* velocity / prediction */
+  --blue: #2F6FD0;
+
+  --c-foot: #D9480F;
+  --c-knee: #B7791F;
+  --c-hand: #6D5BD0;
+  --c-hip: #1F8A5B;
+
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --sans: "Spline Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Dark palette is applied either by the OS setting or by data-theme="dark". */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0E161D;
+    --grid: rgba(160, 200, 230, .06);
+    --ink: #E3EAF0;
+    --ink-2: #A7B5C2;
+    --ink-3: #73828F;
+    --rule: #22313D;
+    --rule-2: #3A4C5B;
+    --panel: #131E27;
+    --panel-2: #1A2833;
+    --accent: #5FB8D6;
+    --accent-bg: #14303C;
+    --pos: #E86AA6;
+    --neg: #4CC48B;
+    --warn: #E0A84A;
+    --vel: #F27A45;
+    --blue: #6FA3F0;
+    --c-foot: #F27A45;
+    --c-knee: #E0A84A;
+    --c-hand: #9D8FF0;
+    --c-hip: #4CC48B;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #0E161D;
+  --grid: rgba(160, 200, 230, .06);
+  --ink: #E3EAF0;
+  --ink-2: #A7B5C2;
+  --ink-3: #73828F;
+  --rule: #22313D;
+  --rule-2: #3A4C5B;
+  --panel: #131E27;
+  --panel-2: #1A2833;
+  --accent: #5FB8D6;
+  --accent-bg: #14303C;
+  --pos: #E86AA6;
+  --neg: #4CC48B;
+  --warn: #E0A84A;
+  --vel: #F27A45;
+  --blue: #6FA3F0;
+  --c-foot: #F27A45;
+  --c-knee: #E0A84A;
+  --c-hand: #9D8FF0;
+  --c-hip: #4CC48B;
+  color-scheme: dark;
+}
+
+
+/* ------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------ */
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+html {
+  scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 64px);
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  margin: 0;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.6;
+  /* graph-paper background */
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  background: var(--paper);
+}
+
+a { color: var(--accent); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+
+/* ------------------------------------------------------------------
+   Layout
+   ------------------------------------------------------------------ */
+
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 40px;
+}
+
+nav.side {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  align-self: start;
+  padding: 40px 0;
+  font-family: var(--sans);
+  font-size: 14px;
+}
+
+nav.side p {
+  margin: 0 0 10px;
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+nav.side a {
+  display: block;
+  padding: 6px 0 6px 12px;
+  border-left: 2px solid var(--rule);
+  color: var(--ink-2);
+  text-decoration: none;
+}
+
+nav.side a:hover {
+  color: var(--ink);
+  border-left-color: var(--rule-2);
+}
+
+nav.side a.on {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  font-weight: 500;
+}
+
+main {
+  padding: 40px 0 80px;
+  min-width: 0;
+}
+
+header.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 32px;
+  align-items: center;
+  padding: 8px 0 48px;
+  border-bottom: 1px solid var(--rule);
+}
+
+section {
+  padding: 56px 0 8px;
+  border-bottom: 1px solid var(--rule);
+}
+
+section:last-of-type { border-bottom: 0; }
+
+
+/* ------------------------------------------------------------------
+   Typography
+   ------------------------------------------------------------------ */
+
+h1 {
+  font-size: clamp(40px, 6vw, 64px);
+  line-height: 1.02;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin: 0 0 18px;
+}
+
+h2 {
+  font-size: 34px;
+  line-height: 1.15;
+  font-weight: 500;
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 28px 0 8px;
+}
+
+p {
+  max-width: 68ch;
+  margin: 0 0 14px;
+}
+
+.lede {
+  font-size: 20px;
+  color: var(--ink-2);
+  margin: 0 0 22px;
+  max-width: 34ch;
+}
+
+.formula {
+  font-family: var(--serif);
+  font-size: clamp(26px, 3.4vw, 34px);
+  margin: 0;
+  color: var(--ink);
+}
+
+.formula small {
+  display: block;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink-3);
+  margin-top: 6px;
+}
+
+
+/* ------------------------------------------------------------------
+   Interactive panels and controls
+   ------------------------------------------------------------------ */
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 20px 0;
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.hero-panel { margin: 0; }
+
+.ctl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.ctl .lab {
+  color: var(--ink-3);
+  min-width: 62px;
+  font-size: 13px;
+}
+
+.ctl .lab-inline { min-width: 0; }
+
+.readout {
+  min-width: 40px;
+  font-weight: 500;
+}
+
+.readout-wide { min-width: 170px; }
+
+button {
+  font: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--rule-2);
+  border-radius: 5px;
+  padding: 6px 11px;
+  cursor: pointer;
+  min-height: 32px;
+}
+
+button:hover { background: var(--panel-2); }
+
+button[aria-pressed="true"] {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.segmented button {
+  margin: 0 6px 4px 0;
+}
+
+input[type=range] {
+  accent-color: var(--accent);
+  flex: 1;
+  min-width: 120px;
+}
+
+
+/* ------------------------------------------------------------------
+   Figures
+   ------------------------------------------------------------------ */
+
+svg.fig {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--panel);
+}
+
+svg text { font-family: var(--sans); }
+
+.bar-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+
+.plots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.metrics div {
+  background: var(--panel-2);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+.metrics span {
+  display: block;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.metrics b {
+  font-size: 17px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  margin: 8px 0;
+}
+
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: -1px;
+}
+
+.dot-blue { background: var(--blue); }
+.dot-vel  { background: var(--vel); }
+.dot-neg  { background: var(--neg); }
+.dot-pos  { background: var(--pos); }
+.dot-warn { background: var(--warn); }
+
+.note {
+  font-size: 14px;
+  color: var(--ink-2);
+  margin: 6px 0 0;
+}
+
+
+/* ------------------------------------------------------------------
+   Tables
+   ------------------------------------------------------------------ */
+
+.tbl {
+  overflow-x: auto;
+  margin-top: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+th {
+  font-weight: 500;
+  color: var(--ink-3);
+  text-align: right;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+td {
+  text-align: right;
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+th:first-child,
+td:first-child { text-align: left; }
+
+tr.sel td {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.static {
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 6px 14px 10px;
+  margin: 14px 0 24px;
+}
+
+.static table { font-size: 14px; }
+
+
+footer {
+  font-family: var(--sans);
+  font-size: 13.5px;
+  color: var(--ink-3);
+  padding: 32px 0 0;
+}
+
+footer p { max-width: 72ch; }
+
+.load-error {
+  color: var(--pos);
+  font-family: var(--sans);
+}
+
+
+/* ------------------------------------------------------------------
+   Narrow screens: nav becomes a horizontal tab strip
+   ------------------------------------------------------------------ */
+
+@media (max-width: 860px) {
+  .wrap {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  nav.side {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 5;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    margin: 0 -20px;
+    padding: 10px 0 10px 20px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  nav.side p { display: none; }
+
+  nav.side a {
+    border-left: 0;
+    border-bottom: 2px solid transparent;
+    padding: 6px 10px;
+    white-space: nowrap;
+  }
+
+  nav.side a.on { border-bottom-color: var(--accent); }
+
+  header.hero { grid-template-columns: 1fr; }
+
+  main { padding-top: 24px; }
+}

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Vertex circles in motion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Spline+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+<div class="wrap">
+<nav class="side" aria-label="Sections">
+  <p>On this page</p>
+  <a href="#circle">The vertex circle</a>
+  <a href="#eyebrow">Eyebrow</a>
+  <a href="#speed">Speed and prediction</a>
+  <a href="#hip">Hip path by gait</a>
+  <a href="#limbs">Leg, hand and body</a>
+</nav>
+<main>
+<header class="hero" id="circle">
+  <div>
+    <h1>Vertex circles in motion</h1>
+    <p class="lede">One circle through three neighbouring points measures how sharply a path bends. Here it follows an eyebrow, a runner’s hip, and every swinging limb.</p>
+    <p class="formula">κ<sub>k</sub> = 2 sin φ<sub>k</sub> ⁄ ‖γ<sub>k+1</sub> − γ<sub>k−1</sub>‖<small>Vertex osculating circle, Bobenko, Discrete Differential Geometry, §2.3.1</small></p>
+  </div>
+  <div class="panel hero-panel">
+    <svg class="fig" id="h-svg" viewBox="0 0 420 300" role="img" aria-label="Three points with the circle passing through them; drag the middle point"></svg>
+    <div class="metrics" id="h-met"></div>
+    <p class="note">Drag the middle point γ<sub>1</sub>. A straight line gives κ = 0; a sharp corner gives a tiny circle.</p>
+  </div>
+</header>
+
+<section id="eyebrow">
+  <h2>Eyebrow</h2>
+  <p>The eyebrow is a discrete curve of seven points γ₀ … γ₆, with γ₀ at the inner end near the nose. It moves smoothly between three poses: neutral, surprised and angry. Units are centimetres.</p>
+  <div class="panel">
+    <div class="ctl"><button id="e-play">Pause</button><span class="lab">Time</span><input type="range" id="e-t" min="0" max="4" step="0.01" value="0"><span id="e-tl" class="readout readout-wide"></span></div>
+    <div class="ctl"><span class="lab">Circle at</span><span id="e-vb"></span></div>
+    <svg class="fig" id="e-svg" viewBox="0 0 680 340" role="img" aria-label="Animated eyebrow with osculating circle and velocity arrows"></svg>
+    <div class="metrics" id="e-met"></div>
+    <div class="tbl"><table><thead><tr><th>k</th><th>x (cm)</th><th>y (cm)</th><th>dx/dt</th><th>dy/dt</th><th>speed (cm/s)</th><th>φ</th><th>κ (1/cm)</th></tr></thead><tbody id="e-tb"></tbody></table></div>
+  </div>
+  <h3>Key poses</h3>
+  <div class="static"><div class="tbl"><table>
+    <thead><tr><th>Vertex</th><th>Neutral</th><th>Surprised</th><th>Angry</th></tr></thead>
+    <tbody>
+      <tr><td>γ₀</td><td>(0, 0)</td><td>(0, 0.50)</td><td>(0.30, −0.40)</td></tr>
+      <tr><td>γ₁</td><td>(1, 0.35)</td><td>(1, 1.15)</td><td>(1.20, 0)</td></tr>
+      <tr><td>γ₂</td><td>(2, 0.60)</td><td>(2, 1.60)</td><td>(2.10, 0.40)</td></tr>
+      <tr><td>γ₃</td><td>(3, 0.75)</td><td>(3, 1.85)</td><td>(3, 0.70)</td></tr>
+      <tr><td>γ₄</td><td>(4, 0.80)</td><td>(4, 1.80)</td><td>(4, 0.85)</td></tr>
+      <tr><td>γ₅</td><td>(5, 0.60)</td><td>(5, 1.40)</td><td>(5, 0.65)</td></tr>
+      <tr><td>γ₆</td><td>(6, 0.20)</td><td>(6, 0.70)</td><td>(6, 0.25)</td></tr>
+      <tr><td>κ₃ at the arch</td><td>−0.098 (R 10.2 cm)</td><td>−0.289 (R 3.5 cm)</td><td>−0.176 (R 5.7 cm)</td></tr>
+    </tbody></table></div></div>
+  <p>From neutral to surprised in one second, γ₃ rises 1.10 cm. The average rate is 1.10 cm/s, and with smooth easing the peak rate is 1.10 × π ⁄ 2 ≈ 1.73 cm/s. The arch curvature changes by about −0.19 cm⁻¹ over that second.</p>
+</section>
+
+<section id="speed">
+  <h2>Speed and prediction</h2>
+  <p>A person moves along a track with position x(t) = v₀t + ½at². The faded figures show the predicted positions one, two and three seconds ahead, using x(t + Δt) = x + vΔt + ½aΔt². When slowing down, the person stops at x + v² ⁄ (2|a|).</p>
+  <div class="panel">
+    <div class="ctl"><span class="lab">Gait</span><span id="r-gb"></span></div>
+    <div class="ctl"><span class="lab">Speed</span><span id="r-pb"></span></div>
+    <div class="ctl"><button id="r-play">Pause</button><button id="r-rst">Restart</button><input type="range" id="r-t" min="0" max="10" step="0.05" value="0"><span id="r-tl" class="readout"></span></div>
+    <svg class="fig" id="r-svg" viewBox="0 0 680 190" role="img" aria-label="Runner on a track with predicted future positions"></svg>
+    <div class="metrics" id="r-met"></div>
+    <div class="tbl"><table><thead><tr><th>Prediction</th><th>time (s)</th><th>x (m)</th><th>v (m/s)</th><th>Δx from now (m)</th></tr></thead><tbody id="r-tb"></tbody></table></div>
+    <div class="plots"><svg id="r-px" viewBox="0 0 320 170" role="img" aria-label="Position over time"></svg><svg id="r-pv" viewBox="0 0 320 170" role="img" aria-label="Speed over time"></svg></div>
+    <div class="key"><span><span class="dot dot-blue"></span>actual so far</span><span><span class="dot dot-vel"></span>predicted next 3 s</span></div>
+  </div>
+  <h3>Gait settings</h3>
+  <div class="static"><div class="tbl"><table>
+    <thead><tr><th>Gait</th><th>Start speed</th><th>Step length</th><th>Cadence</th><th>Distance in 10 s at constant speed</th></tr></thead>
+    <tbody>
+      <tr><td>Walking</td><td>1.4 m/s (5.0 km/h)</td><td>0.75 m</td><td>112 steps/min</td><td>14 m</td></tr>
+      <tr><td>Jogging</td><td>2.5 m/s (9.0 km/h)</td><td>1.0 m</td><td>150 steps/min</td><td>25 m</td></tr>
+      <tr><td>Running</td><td>4.5 m/s (16.2 km/h)</td><td>1.4 m</td><td>193 steps/min</td><td>45 m</td></tr>
+    </tbody></table></div></div>
+  <h3>Worked example: jogging, at t = 4 s</h3>
+  <div class="static"><div class="tbl"><table>
+    <thead><tr><th>Case</th><th>a (m/s²)</th><th>x now</th><th>v now</th><th>x at t + 1, 2, 3 s</th></tr></thead>
+    <tbody>
+      <tr><td>Constant speed</td><td>0</td><td>10.00 m</td><td>2.5 m/s</td><td>12.50, 15.00, 17.50 m</td></tr>
+      <tr><td>Speeding up</td><td>+0.3</td><td>12.40 m</td><td>3.7 m/s</td><td>16.25, 20.40, 24.85 m</td></tr>
+      <tr><td>Slowing down</td><td>−0.3</td><td>7.60 m</td><td>1.3 m/s</td><td>8.75, 9.60, 10.15 m (stops at 10.42 m)</td></tr>
+    </tbody></table></div></div>
+</section>
+
+<section id="hip">
+  <h2>Hip path by gait</h2>
+  <p>Seen from the side, the hip traces a wavy path. It is sampled ten times per step, and each vertex gets its own circle. The picture is at true scale, so the circles can be compared with the body.</p>
+  <div class="panel">
+    <div class="ctl"><span class="lab">Gait</span><span id="p-gb"></span></div>
+    <div class="ctl"><button id="p-play">Play</button><input type="range" id="p-v" min="1" max="19" step="1" value="5"><span id="p-vl" class="readout"></span><button id="p-all" aria-pressed="false">Show all circles</button></div>
+    <svg class="fig" id="p-svg" viewBox="0 0 680 350" role="img" aria-label="Hip path with vertex osculating circle"></svg>
+    <div class="key"><span><span class="dot dot-neg"></span>κ &lt; 0, centre below (hip arcs over)</span><span><span class="dot dot-pos"></span>κ &gt; 0, centre above (hip dips)</span><span><span class="dot dot-warn"></span>sharp corner (step transition)</span></div>
+    <div class="metrics" id="p-met"></div>
+    <p class="note" id="p-note"></p>
+    <svg id="p-kb" viewBox="0 0 680 170" class="bar-chart" role="img" aria-label="Curvature at each vertex"></svg>
+  </div>
+  <h3>Key values</h3>
+  <div class="static"><div class="tbl"><table>
+    <thead><tr><th>Gait</th><th>Phase</th><th>κ (1/m)</th><th>R (m)</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>Walking</td><td>Single stance</td><td>−1.05</td><td>0.95</td><td>Centre on the foot; R is the leg length</td></tr>
+      <tr><td>Walking</td><td>Step transition</td><td>+8.86</td><td>0.11</td><td>Corner where weight switches legs</td></tr>
+      <tr><td>Jogging</td><td>Stance, lowest point</td><td>+1.92</td><td>0.52</td><td>Leg compresses like a spring</td></tr>
+      <tr><td>Jogging</td><td>Flight, top</td><td>−1.56</td><td>0.64</td><td>Free fall, κ ≈ g ⁄ v² = 1.57</td></tr>
+      <tr><td>Running</td><td>Stance, lowest point</td><td>+1.08</td><td>0.93</td><td>Shallower dip than jogging</td></tr>
+      <tr><td>Running</td><td>Flight, top</td><td>−0.48</td><td>2.07</td><td>Free fall, κ ≈ g ⁄ v² = 0.48</td></tr>
+    </tbody></table></div></div>
+</section>
+
+<section id="limbs">
+  <h2>Leg, hand and body</h2>
+  <p>Each joint on the right side of the body is sampled sixteen times per stride. The circle through its last, current and next sample shows how sharply that joint is turning right now. Use the arrows to step one vertex at a time.</p>
+  <div class="panel">
+    <div class="ctl"><span class="lab">Gait</span><span id="l-gb"></span></div>
+    <div class="ctl"><span class="lab">View</span><span id="l-vb"></span></div>
+    <div class="ctl"><span class="lab">Track</span><span id="l-jb"></span></div>
+    <div class="ctl"><button id="l-play">Pause</button><button id="l-prev" aria-label="Previous vertex">‹</button><button id="l-next" aria-label="Next vertex">›</button><span class="lab lab-inline">Slow motion</span><input type="range" id="l-sp" min="0.05" max="1" step="0.05" value="0.2"><span id="l-spl" class="readout"></span></div>
+    <svg class="fig" id="l-svg" viewBox="0 0 680 360" role="img" aria-label="Stick figure with joint paths and osculating circles"></svg>
+    <div class="tbl"><table><thead><tr><th>Joint (right side)</th><th>x (m)</th><th>y (m)</th><th>speed (m/s)</th><th>φ</th><th>κ (1/m)</th><th>R (m)</th></tr></thead><tbody id="l-tb"></tbody></table></div>
+    <p class="note" id="l-info"></p>
+  </div>
+  <h3>What each joint shows</h3>
+  <div class="static"><div class="tbl"><table>
+    <thead><tr><th>Joint</th><th>Path (treadmill view)</th><th>Where circles are small</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td>Foot</td><td>Long teardrop loop</td><td>Heel lift and reach before landing</td><td>Spotting over-striding</td></tr>
+      <tr><td>Knee</td><td>Smaller loop</td><td>Peak bend in swing</td><td>Left–right symmetry in rehab</td></tr>
+      <tr><td>Hand</td><td>Pendulum arc</td><td>Bent elbow in jog and run</td><td>Smartwatch activity detection</td></tr>
+      <tr><td>Hip</td><td>Tiny loop, 2 cm × 5–9 cm</td><td>Everywhere; it barely moves</td><td>Bounce and efficiency</td></tr>
+    </tbody></table></div></div>
+  <p>In the ground view, a planted foot stands still. Its neighbouring vertices land on the same spot, so no circle exists there and the table shows “planted”.</p>
+</section>
+
+<footer>
+  <p>All motion here comes from idealised models: an inverted pendulum for walking, a spring and free fall for jogging and running, and smooth joint-angle patterns for the limbs. The eyebrow poses are illustrative values, not measurements. The curvature formula is exact, so the circles are true vertex osculating circles of the sampled points.</p>
+</footer>
+</main>
+</div>
+</body>
+</html>
