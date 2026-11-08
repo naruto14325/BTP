@@ -1,4 +1,4 @@
-// Entry point: load model parameters from the backend, start each section,
+// Entry point: start each section,
 // and drive all animations from a single requestAnimationFrame loop.
 
 import { initHero } from './hero.js';
@@ -6,13 +6,7 @@ import { initEyebrow } from './eyebrow.js';
 import { initSpeed } from './speed.js';
 import { initHip } from './hip.js';
 import { initLimbs } from './limbs.js';
-
-async function loadPresets() {
-  // Relative path so the site also works from static hosting (no Python server needed).
-  const res = await fetch('data/presets.json');
-  if (!res.ok) throw new Error(`GET data/presets.json failed (${res.status})`);
-  return res.json();
-}
+import presets from './presets.js';
 
 // Only animate sections that are on screen.
 function trackVisibility(sections) {
@@ -52,22 +46,10 @@ function startLoop(sections) {
   requestAnimationFrame(frame);
 }
 
-async function main() {
+function main() {
   initHero();
   highlightNav();
-
-  let presets;
-  try {
-    presets = await loadPresets();
-  } catch (err) {
-    console.error(err);
-    const msg = document.createElement('p');
-    msg.className = 'load-error';
-    msg.textContent = 'Could not load the model data. Please reload the page.';
-    document.querySelector('main').prepend(msg);
-    return;
-  }
-
+  
   const sections = [
     initEyebrow(presets),
     initSpeed(presets),
